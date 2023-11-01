@@ -1,8 +1,34 @@
 
 def main():
     print("Welcome to the Best and safest car park in the world")
-    display_menu()
 
+    while True:
+        display_menu()
+        choice = get_user_choice()
+        if choice == 1:
+            # Handle option 1: Enter the car park
+            print("======================================================")
+            print("enter_car_park()")
+            print("======================================================")
+            # enter_car_park()
+        elif choice == 2:
+            # Handle option 2: Exit the car park
+            print("exit_car_park()")
+            print("======================================================")
+            # exit_car_park()
+        elif choice == 3:
+            # Handle option 3: Query parking record by ticket number
+            print("query_parking_record()")
+            print("======================================================")
+            # query_parking_record()
+        elif choice == 4:
+            # Handle option 4: Quit
+            print("Goodbye!")
+            print("======================================================")
+            break
+        else:
+            print("Invalid choice. Please select a valid option.")
+            print("======================================================")
 
     
 
@@ -12,7 +38,15 @@ def display_menu():
     print("2. Exit the car park")
     print("3. Query parking record by ticket number")
     print("4. Quit")
-    print("0. Exit")
+    print("======================================================")
+
+def get_user_choice():
+    while True:
+        try:
+            choice = int(input("Please enter your choice: "))
+            return choice
+        except ValueError:
+            print("Invalid input. only integers are permitted.")
 
 if __name__ == "__main__":
     main()
