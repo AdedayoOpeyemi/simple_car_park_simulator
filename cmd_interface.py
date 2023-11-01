@@ -10,7 +10,7 @@ def main():
             print("======================================================")
             print("enter_car_park()")
             print("======================================================")
-            # enter_car_park()
+            enter_car_park()
         elif choice == 2:
             # Handle option 2: Exit the car park
             print("exit_car_park()")
@@ -47,6 +47,14 @@ def get_user_choice():
             return choice
         except ValueError:
             print("Invalid input. only integers are permitted.")
+
+def enter_car_park():
+    car_reg = get_car_reg()
+    # create_ticket()
+
+def get_car_reg():
+    car_reg = input("Please enter your car reg: ")
+    return car_reg
 
 if __name__ == "__main__":
     main()
