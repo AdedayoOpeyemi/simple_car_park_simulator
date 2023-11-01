@@ -54,7 +54,8 @@ def enter_car_park():
         car_reg = get_car_reg()
         if is_valid_uk_registration(car_reg):
             print("The car reg is valid")
-            # create_ticket(car_reg)
+            ticket = create_ticket(car_reg)
+            print(ticket)
             break
         else:
             print("Invalid car registration number. Please enter a valid UK car registration number.")
