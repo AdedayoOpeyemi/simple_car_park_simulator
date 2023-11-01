@@ -1,3 +1,4 @@
+from car_park_manager import *
 
 def main():
     print("Welcome to the Best and safest car park in the world")
@@ -49,12 +50,18 @@ def get_user_choice():
             print("Invalid input. only integers are permitted.")
 
 def enter_car_park():
-    car_reg = get_car_reg()
-    # create_ticket()
+    while True:
+        car_reg = get_car_reg()
+        if is_valid_uk_registration(car_reg):
+            print("The car reg is valid")
+            # create_ticket(car_reg)
+            break
+        else:
+            print("Invalid car registration number. Please enter a valid UK car registration number.")
 
 def get_car_reg():
     car_reg = input("Please enter your car reg: ")
-    return car_reg
+    return(car_reg)
 
 if __name__ == "__main__":
     main()
