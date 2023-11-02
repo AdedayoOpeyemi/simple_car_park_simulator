@@ -35,6 +35,7 @@ def main():
     
 
 def display_menu():
+    display_available_space()
     print("You can choose of of the following options from the menu below:")
     print("1. Enter the car park")
     print("2. Exit the car park")
@@ -76,6 +77,9 @@ def get_ticket_details():
         print(ticket_details)
     else:
         print("Ticket with number not found, please check that you are putting in the correct information")
+
+def display_available_space():
+    print("There are 10 spots available")
 
 if __name__ == "__main__":
     main()
