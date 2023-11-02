@@ -1,6 +1,7 @@
 import re
-# import datetime
+import datetime
 from datetime import datetime
+# from time import gmtime, strftime
 
 def is_valid_uk_registration(input_str):
     # Define a regular expression pattern to match common UK registration formats
@@ -41,7 +42,9 @@ def create_ticket(car_reg_number):
         "car_reg_number": car_reg_number,
         "entry_time": entry_time,
         "exit_time": exit_time,
-        "parking_fee": parking_fee
+        "parking_fee": parking_fee,
+        # "special_time": entry_time.strftime('%a, %d %b %Y %H:%M:%S')
+        # "special_time":datetime.utcfromtimestamp(entry_time).strftime('%a, %d %b %Y %H:%M:%S')
     }
 
     return ticket_record
