@@ -5,6 +5,7 @@ import datetime
 from datetime import datetime
 
 CSV_FILENAME = "parking_records.csv"
+HOURLY_RATE = 2
 
 def initialize():
     # csv_filename = "parking_records.csv"
@@ -74,3 +75,45 @@ def save_ticket_record(ticket_record, filename=CSV_FILENAME):
         ]
         csv_writer.writerow(row)
         print("New ticket saved")
+# def update_exit_time():
+
+
+# def calculate_parking_fee(record):
+#     duration = entry_time - exit_time
+
+def fetch_ticket_details_from_csv(ticket_number):
+    with open(CSV_FILENAME, 'r') as csvfile:
+        csv_reader = csv.reader(csvfile)
+
+        # Skip the header row if present
+        next(csv_reader, None)
+
+        for row in csv_reader:
+            print(row)
+            # if len(row) >= 5:
+            current_ticket_number = str(row[0])
+            # print(current_ticket_number)
+            # print(ticket_number)
+
+            # Check if the current ticket number matches the desired ticket number
+            if str(current_ticket_number) == ticket_number:
+                print("ticket number matches")
+                car_reg_number = row[1]
+                # entry_time = datetime.strptime(row[2], '%H:%M:%S')
+                entry_time = row[2]
+                exit_time = row[3]
+                parking_fee = row[4]
+                # Set exit_time to None if it's empty or "None" in the CSV
+                # exit_time_human = datetime.strptime(datetime.now(), '%H:%M:%S')
+
+                # Return the ticket details
+                return {
+                    "ticket_number": current_ticket_number,
+                    "car_reg_number": car_reg_number,
+                    "entry_time": entry_time,
+                    "exit_time": exit_time,
+                    "parking_fee": parking_fee,
+                    "human_readable": exit_time_human
+                }
+
+    return None 

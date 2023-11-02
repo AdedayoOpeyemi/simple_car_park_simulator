@@ -22,7 +22,7 @@ def main():
             # Handle option 3: Query parking record by ticket number
             print("query_parking_record()")
             print("======================================================")
-            # query_parking_record()
+            get_ticket_details()
         elif choice == 4:
             # Handle option 4: Quit
             print("Goodbye!")
@@ -65,6 +65,17 @@ def enter_car_park():
 def get_car_reg():
     car_reg = input("Please enter your car reg: ")
     return(car_reg)
+
+def get_ticket_details():
+    ticket_number = input("Please enter your ticket number: ")
+    
+    ticket_details = fetch_ticket_details_from_csv(ticket_number)
+    # print(ticket_details)
+
+    if ticket_details:
+        print(ticket_details)
+    else:
+        print("Ticket with number not found, please check that you are putting in the correct information")
 
 if __name__ == "__main__":
     main()
