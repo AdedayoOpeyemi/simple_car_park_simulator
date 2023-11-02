@@ -6,16 +6,21 @@ from datetime import datetime
 
 CSV_FILENAME = "parking_records.csv"
 HOURLY_RATE = 2
+ALL_PARKING_SPOTS = ["A1", "A2", "A3", "A4", "A5", "A6", "A7", "A8", "A9", "A10"]
+AVAILABLE_SPOTS = []
 
 def initialize():
-    # csv_filename = "parking_records.csv"
 
+    # csv_filename = "parking_records.csv"
     if not os.path.isfile(CSV_FILENAME):
         # If the CSV file doesn't exist, create it with headers
         with open(CSV_FILENAME, 'w', newline='') as csvfile:
             csv_writer = csv.writer(csvfile)
-            headers = ["Ticket Id", "Date", "License Plate", "Entry Time", "Exit Time", "Parking fee"]
+            headers = ["Ticket Id", "Vehicle Reg no", "Parking spot", "Entry Time", "Exit Time", "Parking fee", "Status"]
             csv_writer.writerow(headers)
+    
+    # update available car park spots
+    update_available_spots()
 
 def is_valid_uk_registration(input_str):
     # Define a regular expression pattern to match common UK registration formats
@@ -42,7 +47,7 @@ def create_ticket(car_reg_number):
 
     # Create a unique ticket number using car reg number and current time
     ticket_number = f"{car_reg_number}{entry_time}"
-
+    assigned_parking_spot = extract_open_parking_spots(CSV_FILENAME)[0]
     # Get the entry time (current time)
     # entry_time = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(current_time_epoch))
 
@@ -54,9 +59,11 @@ def create_ticket(car_reg_number):
     ticket_record = {
         "ticket_number": ticket_number,
         "car_reg_number": car_reg_number,
+        "parking_spot": assigned_parking_spot,
         "entry_time": entry_time,
         "exit_time": exit_time,
         "parking_fee": parking_fee,
+        "status": "open"
         # "special_time": entry_time.strftime('%a, %d %b %Y %H:%M:%S')
         # "special_time":datetime.utcfromtimestamp(entry_time).strftime('%a, %d %b %Y %H:%M:%S')
     }
@@ -69,9 +76,11 @@ def save_ticket_record(ticket_record, filename=CSV_FILENAME):
         row = [
             ticket_record["ticket_number"],
             ticket_record["car_reg_number"],
+            ticket_record["parking_spot"],
             ticket_record["entry_time"],
             ticket_record["exit_time"],
-            ticket_record["parking_fee"]
+            ticket_record["parking_fee"],
+            ticket_record["status"]
         ]
         csv_writer.writerow(row)
         print("New ticket saved")
@@ -117,3 +126,24 @@ def fetch_ticket_details_from_csv(ticket_number):
                 }
 
     return None 
+
+# def available_spots():
+
+def extract_open_parking_spots(csv_file):
+    closed_parking_spots = []
+    
+    with open(csv_file, 'r') as csvfile:
+        csv_reader = csv.DictReader(csvfile)
+        for row in csv_reader:
+            if row['Status'] == 'open':
+                closed_parking_spots.append(row['Parking spot'])
+
+    available_spots = [spot for spot in ALL_PARKING_SPOTS if spot not in closed_parking_spots]
+
+    return available_spots
+
+def update_available_spots():
+    AVAILABLE_SPOTS = extract_open_parking_spots(CSV_FILENAME)
+
+
+# print(extract_open_parking_spots(CSV_FILENAME))
