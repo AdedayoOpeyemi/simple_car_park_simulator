@@ -61,3 +61,16 @@ def create_ticket(car_reg_number):
     }
 
     return ticket_record
+
+def save_ticket_record(ticket_record, filename=CSV_FILENAME):
+    with open(filename, 'a', newline='') as csvfile:
+        csv_writer = csv.writer(csvfile)
+        row = [
+            ticket_record["ticket_number"],
+            ticket_record["car_reg_number"],
+            ticket_record["entry_time"],
+            ticket_record["exit_time"],
+            ticket_record["parking_fee"]
+        ]
+        csv_writer.writerow(row)
+        print("New ticket saved")
