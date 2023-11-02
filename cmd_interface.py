@@ -1,6 +1,7 @@
 from car_park_manager import *
 
 def main():
+    initialize()
     print("Welcome to the Best and safest car park in the world")
 
     while True:

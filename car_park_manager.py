@@ -1,7 +1,20 @@
+import os
+import csv
 import re
 import datetime
 from datetime import datetime
-# from time import gmtime, strftime
+
+CSV_FILENAME = "parking_records.csv"
+
+def initialize():
+    # csv_filename = "parking_records.csv"
+
+    if not os.path.isfile(CSV_FILENAME):
+        # If the CSV file doesn't exist, create it with headers
+        with open(CSV_FILENAME, 'w', newline='') as csvfile:
+            csv_writer = csv.writer(csvfile)
+            headers = ["Ticket Id", "Date", "License Plate", "Entry Time", "Exit Time", "Parking fee"]
+            csv_writer.writerow(headers)
 
 def is_valid_uk_registration(input_str):
     # Define a regular expression pattern to match common UK registration formats
