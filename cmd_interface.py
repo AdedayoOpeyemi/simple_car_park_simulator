@@ -17,7 +17,7 @@ def main():
             # Handle option 2: Exit the car park
             print("exit_car_park()")
             print("======================================================")
-            # exit_car_park()
+            exit_car_park()
         elif choice == 3:
             # Handle option 3: Query parking record by ticket number
             print("query_parking_record()")
@@ -80,6 +80,11 @@ def get_ticket_details():
 
 def display_available_space():
     print("There are 10 spots available")
+
+def exit_car_park():
+    car_reg=input("Please enter your car reg number: ")
+    close_ticket(car_reg)
+    # display_ticket()
 
 if __name__ == "__main__":
     main()

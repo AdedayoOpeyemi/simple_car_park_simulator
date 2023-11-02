@@ -122,7 +122,7 @@ def fetch_ticket_details_from_csv(ticket_number):
                     "entry_time": entry_time,
                     "exit_time": exit_time,
                     "parking_fee": parking_fee,
-                    "human_readable": exit_time_human
+                    # "human_readable": exit_time_human
                 }
 
     return None 
@@ -145,5 +145,41 @@ def extract_open_parking_spots(csv_file):
 def update_available_spots():
     AVAILABLE_SPOTS = extract_open_parking_spots(CSV_FILENAME)
 
-
+def close_ticket(car_reg):
+    update_exit_time(car_reg)
+    update_parking_fee(car_reg)
+    # update_ticket_status()
 # print(extract_open_parking_spots(CSV_FILENAME))
+
+# def update_exit_time():
+
+
+def update_exit_time(car_reg, csv_file=CSV_FILENAME):
+    # Get the current date and time
+    exit_time = int(datetime.now().timestamp())
+
+    # Read the original CSV file and create a temporary list to store the updated data
+    updated_data = []
+
+    with open(csv_file, 'r') as csvfile:
+        csv_reader = csv.reader(csvfile)
+        # header = next(csv_reader)  # Skip the header row
+        # updated_data.append(header)  # Add the header to the updated data
+        csv_reader = csv.DictReader(csvfile)  # Create a DictReader object
+        for row in csv_reader:
+            if row['Vehicle Reg no'] == car_reg and row['Status'] == 'open':
+            # if row[1] == car_reg:
+                # Update the "Exit Time" field with the current time
+                row[4] = exit_time
+            updated_data.append(row)
+
+    # Write the modified data back to the same CSV file while maintaining the entry order
+    with open(csv_file, 'w', newline='') as csvfile:
+        csv_writer = csv.writer(csvfile)
+        csv_writer.writerows(updated_data)
+
+def update_parking_fee(car_reg):
+    parking_fee = calculate_fee(car_reg)
+
+def calculate_fee(car_reg):
+    print("I will calculate the fee")
