@@ -8,6 +8,7 @@ CSV_FILENAME = "parking_records.csv"
 HOURLY_RATE = 2
 ALL_PARKING_SPOTS = ["A1", "A2", "A3", "A4", "A5", "A6", "A7", "A8", "A9", "A10"]
 AVAILABLE_SPOTS = []
+BASE_FEE = 0.25
 csv_headers = ["Ticket Id", "Vehicle Reg no", "Parking spot", "Entry Time", "Exit Time", "Parking fee", "Status"]
 header_mapping = {"ticket_number": "Ticket Id",
                   "car_reg_no": "Vehicle Reg no",
@@ -220,6 +221,8 @@ def update_exit_time(car_reg, csv_file=CSV_FILENAME):
                 # Update the "Exit Time" field with the current time
                 row['Exit Time'] = exit_time
                 row['Status'] = 'Closed'
+                row['Parking fee'] = calculate_fee(int(exit_time), int(row['Entry Time']))
+
             updated_data.append(row)
 
     # Write the updated data back to the CSV file
@@ -234,5 +237,30 @@ def update_exit_time(car_reg, csv_file=CSV_FILENAME):
 def update_parking_fee(car_reg):
     parking_fee = calculate_fee(car_reg)
 
-def calculate_fee(car_reg):
-    print("I will calculate the fee")
+# def calculate_fee(car_reg):
+#     print("I will calculate the fee")
+#     hours_parked = (exit_time - entry_time) / 3600  # Calculate hours parked
+#     fee = hours_parked * HOURLY_RATE  # Calculate the fee based on hours and hourly rate
+
+
+def calculate_fee(exit_time, entry_time):
+    # Read the CSV file and find the entry and exit times based on the ticket number
+    # entry_time = None
+    # exit_time = None
+
+    # with open(csv_file, 'r') as csvfile:
+    #     csv_reader = csv.DictReader(csvfile)
+    #     for row in csv_reader:
+    #         if row['Vehicle Reg no'] == car_reg and row['Status'] == 'Closed':
+    #             entry_time = int(row['Entry Time'])
+    #             exit_time = int(row['Exit Time'])
+    #             break
+
+    # if entry_time is None or exit_time is None:
+    #     print(f"Entry and exit times not found for vehicle with registration number {car_reg}")
+    #     return None
+
+    hours_parked = (exit_time - entry_time) / 3600  # Calculate hours parked
+    fee = hours_parked * HOURLY_RATE  # Calculate the fee based on hours and hourly rate
+    fee = round(fee, 2)
+    return max(fee, BASE_FEE)
