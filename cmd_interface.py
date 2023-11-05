@@ -79,7 +79,9 @@ def get_ticket_details():
         print("Ticket with number not found, please check that you are putting in the correct information")
 
 def display_available_space():
-    print("There are 10 spots available")
+    print(f"There are {len(extract_open_parking_spots())} spots available")
+
+    # print("There are {extract_open_parking_spots()} spots available")
 
 def exit_car_park():
     car_reg=input("Please enter your car reg number: ")
