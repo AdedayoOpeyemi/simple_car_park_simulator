@@ -43,6 +43,53 @@ def display_menu():
     print("4. Quit")
     print("======================================================")
 
+# def display_ticket(ticket):
+    # if ticket:
+    #     table = texttable.Texttable()
+    #     table.set_cols_align(["l", "l"])
+    #     table.set_cols_valign(["m", "m"])
+
+    #     table.header(["Attribute", "Value"])
+    #     table.add_row(["Ticket Number", ticket.ticket_number])
+    #     table.add_row(["Car Registration Number", ticket.car_reg_number])
+    #     table.add_row(["Parking Spot", ticket.parking_spot])
+    #     table.add_row(["Entry Time", datetime.utcfromtimestamp(ticket.entry_time).strftime('%Y-%m-%d %H:%M:%S')])
+    #     table.add_row(["Exit Time", datetime.utcfromtimestamp(ticket.exit_time).strftime('%Y-%m-%d %H:%M:%S') if ticket.exit_time else "Vehicle still parked..."])
+    #     table.add_row(["Parking Fee", f"${ticket.parking_fee:.2f}" if ticket.exit_time else "Not calculated yet"])
+    #     table.add_row(["Status", ticket.status])
+
+    #     print("\033[93m")  # Set text color to yellow
+    #     print("Parking Ticket Details:")
+    #     print(table.draw())
+    #     print("\033[0m")  # Reset text color
+    # else:
+    #     print("No ticket found.")
+
+def display_ticket(ticket):
+    if ticket:
+        print("\033[93m")  # Set text color to yellow
+        print("Parking Ticket Details:")
+        print(f"{'Field':<25}{'Content':<25}")
+        print('-' * 50)
+
+        attributes = [
+            ["Ticket Number", ticket.get("ticket_number", "")],
+            ["Car Registration Number", ticket.get("car_reg_number", "")],
+            ["Parking Spot", ticket.get("parking_spot", "")],
+            ["Entry Time", datetime.utcfromtimestamp(ticket.get("entry_time", 0)).strftime('%Y-%m-%d %H:%M:%S')],
+            ["Exit Time", datetime.utcfromtimestamp(ticket.get('exit_time', 0)).strftime('%Y-%m-%d %H:%M:%S') if ticket.get("exit_time") else f"\033[3;93mVehicle still parked...\033[0m\033[93m"],
+            ["Parking Fee", f"\033[3;93m\033[3m${ticket.get('parking_fee', 0.00):.2f}\033[0m" if ticket.get("exit_time") else f"\033[3;93mNot calculated yet\033[0m\033[93m"],
+            ["Status", f"\033[3;93m{ticket.get('status', '')}\033[0m"]
+        ]
+
+        for attribute, value in attributes:
+            print(f"{attribute:<25}{value:<25}")
+
+        print("\033[0m")  # Reset text color
+    else:
+        print("No ticket found.")
+
+
 def get_user_choice():
     while True:
         try:
@@ -58,6 +105,7 @@ def enter_car_park():
             print("The car reg is valid")
             ticket = create_ticket(car_reg)
             print(ticket)
+            display_ticket(ticket)
             save_ticket_record(ticket)
             break
         else:
