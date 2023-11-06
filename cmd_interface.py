@@ -74,16 +74,17 @@ def get_user_choice():
 def enter_car_park():
     while True:
         display_guide_statement()
+        go_back_guide()
         car_reg = get_car_reg()
+        if car_reg == "*":
+            break
         if is_valid_uk_registration(car_reg):
-            print("The car reg is valid")
             ticket = create_ticket(car_reg)
             print(ticket)
             display_ticket(ticket)
-            # save_ticket_record(ticket)
             break
         else:
-            print("Invalid car registration number. Please enter a valid UK car registration number.")
+            print("\033[91mInvalid car registration number.\nPlease enter a valid UK car registration number or * to go back to the previous menu\033[0m")
 
 def get_car_reg():
     car_reg = input("Please enter your car reg: ")
@@ -134,6 +135,37 @@ def display_guide_statement():
 
     # Print the bottom border of the box
     print(box_char * box_width)
+
+def display_guide_statement():
+    green_color = "\033[32m"
+    reset_color = "\033[0m"
+    box_char = "▒"  # Character for drawing the box
+
+    # Define the content of the box
+    guide_text = [
+        "Please enter your car registration in any of the accepted formats:",
+        "1. Current Standard Format: AB12 CDE or AB12CDE",
+        "2. Dateless Personalized Plates: ABC 123 or ABC123",
+        "3. Northern Ireland Format: AB 1234 or AB1234",
+        "4. Diplomatic Plates: 123 A 456 or 123A456",
+    ]
+
+    # Determine the width of the box
+    box_width = max(len(line) for line in guide_text) + 4  # Add padding for the box borders
+    # Print the top border of the box
+    print(box_char * box_width)
+
+    # Print the content of the box
+    for line in guide_text:
+        line = green_color + line + reset_color
+        line = line.ljust(box_width + 5)  # Left-align the text with padding
+        print(f"{box_char} {line} {box_char}")
+
+    # Print the bottom border of the box
+    print(box_char * box_width)
+
+def go_back_guide():
+    print("\n\033[38;5;208mPress * to go back to the previous menu\033[0m\n")
 
 if __name__ == "__main__":
     main()
