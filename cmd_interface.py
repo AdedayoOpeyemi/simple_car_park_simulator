@@ -73,13 +73,13 @@ def display_ticket(ticket):
         print('-' * 50)
 
         attributes = [
-            ["Ticket Number", ticket.get("ticket_number", "")],
-            ["Car Registration Number", ticket.get("car_reg_number", "")],
-            ["Parking Spot", ticket.get("parking_spot", "")],
-            ["Entry Time", datetime.utcfromtimestamp(ticket.get("entry_time", 0)).strftime('%Y-%m-%d %H:%M:%S')],
-            ["Exit Time", datetime.utcfromtimestamp(ticket.get('exit_time', 0)).strftime('%Y-%m-%d %H:%M:%S') if ticket.get("exit_time") else f"\033[3;93mVehicle still parked...\033[0m\033[93m"],
-            ["Parking Fee", f"\033[3;93m\033[3m${ticket.get('parking_fee', 0.00):.2f}\033[0m" if ticket.get("exit_time") else f"\033[3;93mNot calculated yet\033[0m\033[93m"],
-            ["Status", f"\033[3;93m{ticket.get('status', '')}\033[0m"]
+            ["Ticket Number:", ticket.get("ticket_number", "")],
+            ["Car Registration Number:", ticket.get("car_reg_number", "")],
+            ["Parking Spot:", ticket.get("parking_spot", "")],
+            ["Entry Time:", datetime.utcfromtimestamp(ticket.get("entry_time", 0)).strftime('%Y-%m-%d %H:%M:%S')],
+            ["Exit Time:", datetime.utcfromtimestamp(ticket.get('exit_time', 0)).strftime('%Y-%m-%d %H:%M:%S') if ticket.get("exit_time") else f"\033[3;93mVehicle still parked...\033[0m\033[93m"],
+            ["Parking Fee:", f"\033[3;93m\033[3m${ticket.get('parking_fee', 0.00):.2f}\033[0m" if ticket.get("exit_time") else f"\033[3;93mNot calculated yet\033[0m\033[93m"],
+            ["Status:", f"\033[3;93m{ticket.get('status', '')}\033[0m"]
         ]
 
         for attribute, value in attributes:
@@ -100,6 +100,7 @@ def get_user_choice():
 
 def enter_car_park():
     while True:
+        display_guide_statement()
         car_reg = get_car_reg()
         if is_valid_uk_registration(car_reg):
             print("The car reg is valid")
@@ -113,7 +114,7 @@ def enter_car_park():
 
 def get_car_reg():
     car_reg = input("Please enter your car reg: ")
-    return(car_reg)
+    return(car_reg.strip().replace(" ", ""))
 
 def get_ticket_details():
     ticket_number = input("Please enter your ticket number: ")
@@ -135,6 +136,158 @@ def exit_car_park():
     car_reg=input("Please enter your car reg number: ")
     close_ticket(car_reg)
     # display_ticket()
+
+
+# def display_guide_statement():
+#     green_color = "\033[32m"
+#     reset_color = "\033[0m"
+    
+#     print(green_color + "Welcome to the UK Car Registration Validator!" + reset_color)
+#     print(green_color + "Please enter your car registration in one of the following accepted formats:" + reset_color)
+#     print(green_color + "1. Current Standard Format: AB12 CDE (with space)" + reset_color)
+#     print(green_color + "   or AB12CDE (without space)" + reset_color)
+#     print(green_color + "2. Dateless Personalized Plates: ABC 123 (with space)" + reset_color)
+#     print(green_color + "   or ABC123 (without space)" + reset_color)
+#     print(green_color + "3. Northern Ireland Format: AB 1234 (with space)" + reset_color)
+#     print(green_color + "   or AB1234 (without space)" + reset_color)
+#     print(green_color + "4. Diplomatic Plates: 123 A 456 (with space)" + reset_color)
+#     print(green_color + "   or 123A456 (without space)" + reset_color)
+#     print(green_color + "You can enter your car registration in any of these formats." + reset_color)
+
+
+# def display_guide_statement():
+#     green_color = "\033[32m"
+#     reset_color = "\033[0m"
+#     # box_char = "+"  # Character for drawing the box
+
+#     # # Define the content of the box
+#     # guide_text = [
+#     #     green_color + "    ",
+#     #     "Please enter your car registration in any of the accepted formats:",
+#     #     "1. Current Standard Format: AB12 CDE or AB12CDE",
+#     #     "2. Dateless Personalized Plates: ABC 123 or ABC123",
+#     #     "3. Northern Ireland Format: AB 1234 or AB1234",
+#     #     "4. Diplomatic Plates: 123 A 456 or 123A456",
+#     #     "    " + reset_color,
+#     # ]
+
+#     box_char = "▒"  # Character for drawing the box
+
+#     # Define the content of the box
+#     guide_text = [
+#         green_color,
+#         "Welcome to the UK Car Registration Validator!",
+#         "Please enter your car registration in any of the accepted formats:",
+#         "1. Current Standard Format: AB12 CDE or AB12CDE",
+#         "2. Dateless Personalized Plates: ABC 123 or ABC123",
+#         "3. Northern Ireland Format: AB 1234 or AB1234",
+#         "4. Diplomatic Plates: 123 A 456 or 123A456",
+#         reset_color,
+#     ]
+
+#     # Determine the width of the box
+#     # box_width = max(len(line) for line in guide_text) + 4  # Add padding for the box borders
+#     box_width = 100
+
+#     # Print the top border of the box
+#     print(box_char * box_width)
+
+#     # Print the content of the box
+#     for line in guide_text:
+#         line = line.ljust(box_width - 4)  # Left-align the text
+#         print(f"{box_char} {line} {box_char}")
+
+#     # Print the bottom border of the box
+#     print(box_char * box_width)
+
+
+# def display_guide_statement():
+#     green_color = "\033[32m"
+#     reset_color = "\033[0m"
+#     box_char = "▒"  # Character for drawing the box
+
+#     # Define the content of the box
+#     guide_text = [
+#         "Welcome to the UK Car Registration Validator!",
+#         "Please enter your car registration in any of the accepted formats:",
+#         "1. Current Standard Format: AB12 CDE or AB12CDE",
+#         "2. Dateless Personalized Plates: ABC 123 or ABC123",
+#         "3. Northern Ireland Format: AB 1234 or AB1234",
+#         "4. Diplomatic Plates: 123 A 456 or 123A456",
+#     ]
+
+#     # Determine the width of the box
+#     box_width = max(len(line) for line in guide_text) + 4  # Add padding for the box borders
+
+#     # Print the top border of the box
+#     print(box_char * box_width)
+
+#     # Print the content of the box
+#     for line in guide_text:
+#         line = green_color + line + reset_color
+#         line = line.center(box_width - 4)  # Center-align the text
+#         print(f"{box_char} {line} {box_char}")
+
+#     # Print the bottom border of the box
+#     print(box_char * box_width)
+
+# def display_guide_statement():
+#     green_color = "\033[32m"
+#     reset_color = "\033[0m"
+#     box_char = "▒"  # Character for drawing the box
+
+#     # Define the content of the box
+#     guide_text = [
+#         "Welcome to the UK Car Registration Validator!",
+#         "Please enter your car registration in any of the accepted formats:",
+#         "1. Current Standard Format: AB12 CDE or AB12CDE",
+#         "2. Dateless Personalized Plates: ABC 123 or ABC123",
+#         "3. Northern Ireland Format: AB 1234 or AB1234",
+#         "4. Diplomatic Plates: 123 A 456 or 123A456",
+#     ]
+
+#     # Determine the width of the box
+#     box_width = max(len(line) for line in guide_text) + 2  # Add padding for the box borders
+
+#     # Print the top border of the box
+#     print(box_char * box_width)
+
+#     # Print the content of the box
+#     for line in guide_text:
+#         line = line.center(box_width)  # Center-align the text
+#         print(f"{box_char}{green_color} {line} {reset_color}{box_char}")
+
+#     # Print the bottom border of the box
+#     print(box_char * box_width)
+
+def display_guide_statement():
+    green_color = "\033[32m"
+    reset_color = "\033[0m"
+    box_char = "▒"  # Character for drawing the box
+
+    # Define the content of the box
+    guide_text = [
+        "Please enter your car registration in any of the accepted formats:",
+        "1. Current Standard Format: AB12 CDE or AB12CDE",
+        "2. Dateless Personalized Plates: ABC 123 or ABC123",
+        "3. Northern Ireland Format: AB 1234 or AB1234",
+        "4. Diplomatic Plates: 123 A 456 or 123A456",
+    ]
+
+    # Determine the width of the box
+    box_width = max(len(line) for line in guide_text) + 2  # Add padding for the box borders
+    # box_width = 80
+    # Print the top border of the box
+    print(box_char * box_width)
+
+    # Print the content of the box
+    for line in guide_text:
+        line = green_color + line + reset_color
+        line = line.ljust(box_width)  # Left-align the text
+        print(f"{box_char} {line} {box_char}")
+
+    # Print the bottom border of the box
+    print(box_char * box_width)
 
 if __name__ == "__main__":
     main()

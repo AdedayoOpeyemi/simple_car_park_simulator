@@ -42,12 +42,26 @@ def is_valid_uk_registration(input_str):
         # Add more patterns for special cases as needed
     ]
 
+    # Define a regular expression pattern to match common UK registration formats
+    patterns = [
+        r'^[A-Z]{2}\d{2} [A-Z]{3}$',       # Current Standard Format with space
+        r'^[A-Z]{2}\d{2}[A-Z]{3}$',        # Current Standard Format without space
+        r'^[A-Z]{3} \d{3}$',              # Dateless Personalized Plates with space
+        r'^[A-Z]{3}\d{3}$',               # Dateless Personalized Plates without space
+        r'^[A-Z]{2} \d{4}$',              # Northern Ireland Format with space
+        r'^[A-Z]{2}\d{4}$',               # Northern Ireland Format without space
+        r'^\d{3} [A-Z] \d{3}$',          # Diplomatic Plates with space
+        r'^\d{3}[A-Z]\d{3}$',            # Diplomatic Plates without space
+        # Add more patterns for special cases as needed
+    ]
+
+    
+
     # Use re.match() to check if the input matches any of the patterns
     for pattern in patterns:
         if re.match(pattern, input_str):
             return True
     return False
-
 
 def create_ticket(car_reg_number):
     entry_time = int(datetime.now().timestamp())
@@ -56,7 +70,7 @@ def create_ticket(car_reg_number):
     current_time_epoch = int(datetime.now().timestamp())
 
     # Create a unique ticket number using car reg number and current time
-    ticket_number = f"{car_reg_number}{entry_time}"
+    ticket_number = f"{entry_time}{car_reg_number}"
     assigned_parking_spot = extract_open_parking_spots(CSV_FILENAME)[0]
     # Get the entry time (current time)
     # entry_time = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(current_time_epoch))
