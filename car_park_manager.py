@@ -92,12 +92,13 @@ def create_ticket(car_reg_number):
         # "special_time":datetime.utcfromtimestamp(entry_time).strftime('%a, %d %b %Y %H:%M:%S')
     }
 
+    save_ticket_record(ticket_record)
     return ticket_record
 
 def map_ticket_record_to_headers(ticket_record):
     mapped_record = {
         "Ticket Id": ticket_record.get("ticket_number", ""),
-        "Vehicle Reg no": ticket_record.get("car_reg_number", ""),
+        "Vehicle Reg no": ticket_record.get("car_reg_no", ""),
         "Parking spot": ticket_record.get("parking_spot", ""),
         "Entry Time": ticket_record.get("entry_time", ""),
         "Exit Time": ticket_record.get("exit_time", ""),
