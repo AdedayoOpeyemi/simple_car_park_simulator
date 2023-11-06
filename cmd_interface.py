@@ -74,11 +74,11 @@ def display_ticket(ticket):
 
         attributes = [
             ["Ticket Number:", ticket.get("ticket_number", "")],
-            ["Car Registration Number:", ticket.get("car_reg_number", "")],
+            ["Car Registration Number:", ticket.get("car_reg_no", "")],
             ["Parking Spot:", ticket.get("parking_spot", "")],
-            ["Entry Time:", datetime.utcfromtimestamp(ticket.get("entry_time", 0)).strftime('%Y-%m-%d %H:%M:%S')],
-            ["Exit Time:", datetime.utcfromtimestamp(ticket.get('exit_time', 0)).strftime('%Y-%m-%d %H:%M:%S') if ticket.get("exit_time") else f"\033[3;93mVehicle still parked...\033[0m\033[93m"],
-            ["Parking Fee:", f"\033[3;93m\033[3m${ticket.get('parking_fee', 0.00):.2f}\033[0m" if ticket.get("exit_time") else f"\033[3;93mNot calculated yet\033[0m\033[93m"],
+            ["Entry Time:", datetime.utcfromtimestamp(int(ticket.get("entry_time", 0))).strftime('%Y-%m-%d %H:%M:%S')],
+            ["Exit Time:", datetime.utcfromtimestamp(int(ticket.get('exit_time', 0))).strftime('%Y-%m-%d %H:%M:%S') if ticket.get("exit_time") else f"\033[3;93mVehicle still parked...\033[0m\033[93m"],
+            ["Parking Fee:", f"\033[3;93m\033[3m${(float(ticket.get('parking_fee', 0.00))):.2f}\033[0m" if ticket.get("exit_time") else f"\033[3;93mNot calculated yet\033[0m\033[93m"],
             ["Status:", f"\033[3;93m{ticket.get('status', '')}\033[0m"]
         ]
 
@@ -123,7 +123,7 @@ def get_ticket_details():
     # print(ticket_details)
 
     if ticket_details:
-        print(ticket_details)
+        display_ticket(ticket_details)
     else:
         print("Ticket with number not found, please check that you are putting in the correct information")
 

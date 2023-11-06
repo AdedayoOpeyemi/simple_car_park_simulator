@@ -82,7 +82,7 @@ def create_ticket(car_reg_number):
     # Create a dictionary to store the ticket record
     ticket_record = {
         "ticket_number": ticket_number,
-        "car_reg_number": car_reg_number,
+        "car_reg_no": car_reg_number,
         "parking_spot": assigned_parking_spot,
         "entry_time": entry_time,
         "exit_time": exit_time,
@@ -133,42 +133,120 @@ def save_ticket_record(ticket_record, filename=CSV_FILENAME):
 # def calculate_parking_fee(record):
 #     duration = entry_time - exit_time
 
-def fetch_ticket_details_from_csv(ticket_number):
-    with open(CSV_FILENAME, 'r') as csvfile:
-        csv_reader = csv.reader(csvfile)
+# def fetch_ticket_details_from_csv(ticket_number):
+#     with open(CSV_FILENAME, 'r') as csvfile:
+#         csv_reader = csv.reader(csvfile)
 
-        # Skip the header row if present
-        next(csv_reader, None)
+#         # Skip the header row if present
+#         next(csv_reader, None)
+
+#         for row in csv_reader:
+#             print(row)
+#             # if len(row) >= 5:
+#             current_ticket_number = str(row[0])
+#             # print(current_ticket_number)
+#             # print(ticket_number)
+
+#             # Check if the current ticket number matches the desired ticket number
+#             if str(current_ticket_number) == ticket_number:
+#                 print("ticket number matches")
+#                 car_reg_number = row[1]
+#                 # entry_time = datetime.strptime(row[2], '%H:%M:%S')
+#                 entry_time = row[2]
+#                 exit_time = row[3]
+#                 parking_fee = row[4]
+#                 # Set exit_time to None if it's empty or "None" in the CSV
+#                 # exit_time_human = datetime.strptime(datetime.now(), '%H:%M:%S')
+
+#                 # Return the ticket details
+#                 return {
+#                     "ticket_number": current_ticket_number,
+#                     "car_reg_number": car_reg_number,
+#                     "entry_time": entry_time,
+#                     "exit_time": exit_time,
+#                     "parking_fee": parking_fee,
+#                     # "human_readable": exit_time_human
+#                 }
+
+#     return None 
+
+# def fetch_ticket_details_from_csv(ticket_number):
+#     ticket_details = {
+#         "ticket_number": None,
+#         "car_reg_number": None,
+#         "entry_time": None,
+#         "exit_time": None,
+#         "parking_fee": None,
+#         "status": None
+#     }
+
+#     with open(CSV_FILENAME, 'r') as csvfile:
+#         csv_reader = csv.DictReader(csvfile)
+
+#         for row in csv_reader:
+#             current_ticket_number = row.get(header_mapping["Ticket Id"])
+
+#             # Check if the current ticket number matches the desired ticket number
+#             if current_ticket_number == ticket_number:
+#                 ticket_details["ticket_number"] = current_ticket_number
+#                 ticket_details["car_reg_number"] = row.get(header_mapping["Vehicle Reg no"])
+#                 entry_time_str = row.get(header_mapping["Entry Time"])
+#                 exit_time_str = row.get(header_mapping["Exit Time"])
+#                 parking_fee = row.get(header_mapping["Parking fee"])
+#                 status = row.get(header_mapping["Status"])
+
+#                 try:
+#                     entry_time = datetime.strptime(entry_time_str, '%Y-%m-%d %H:%M:%S')
+#                     ticket_details["entry_time"] = entry_time
+#                 except ValueError:
+#                     pass  # Handle invalid datetime format
+
+#                 try:
+#                     exit_time = datetime.strptime(exit_time_str, '%Y-%m-%d %H:%M:%S')
+#                     ticket_details["exit_time"] = exit_time
+#                 except ValueError:
+#                     pass  # Handle invalid datetime format
+
+#                 ticket_details["parking_fee"] = parking_fee
+#                 ticket_details["status"] = status
+
+#                 break  # Exit the loop once a matching ticket is found
+
+#     return ticket_details
+
+def fetch_ticket_details_from_csv(ticket_number):
+    ticket_details = {key: None for key in header_mapping}
+
+    with open(CSV_FILENAME, 'r') as csvfile:
+        csv_reader = csv.DictReader(csvfile, fieldnames=csv_headers)
 
         for row in csv_reader:
-            print(row)
-            # if len(row) >= 5:
-            current_ticket_number = str(row[0])
-            # print(current_ticket_number)
-            # print(ticket_number)
+            current_ticket_number = row.get(header_mapping["ticket_number"])
 
             # Check if the current ticket number matches the desired ticket number
-            if str(current_ticket_number) == ticket_number:
-                print("ticket number matches")
-                car_reg_number = row[1]
-                # entry_time = datetime.strptime(row[2], '%H:%M:%S')
-                entry_time = row[2]
-                exit_time = row[3]
-                parking_fee = row[4]
-                # Set exit_time to None if it's empty or "None" in the CSV
-                # exit_time_human = datetime.strptime(datetime.now(), '%H:%M:%S')
+            if current_ticket_number == ticket_number:
+                for key, csv_field in header_mapping.items():
+                    ticket_details[key] = row.get(csv_field)
+                    print(ticket_details)
 
-                # Return the ticket details
-                return {
-                    "ticket_number": current_ticket_number,
-                    "car_reg_number": car_reg_number,
-                    "entry_time": entry_time,
-                    "exit_time": exit_time,
-                    "parking_fee": parking_fee,
-                    # "human_readable": exit_time_human
-                }
+                # entry_time_str = ticket_details["entry_time"]
+                # exit_time_str = ticket_details.get("exit_time", None)
 
-    return None 
+                # try:
+                #     # entry_time = datetime.strptime(entry_time_str, '%Y-%m-%d %H:%M:%S')
+                #     ticket_details["entry_time"] = entry_time
+                # except ValueError:
+                #     ticket_details["entry_time"] = None  # Set to None if not a valid datetime
+
+                # try:
+                #     exit_time = datetime.strptime(exit_time_str, '%Y-%m-%d %H:%M:%S')
+                #     ticket_details["exit_time"] = exit_time
+                # except ValueError:
+                # pass  # Handle invalid datetime format
+
+                break  # Exit the loop once a matching ticket is found
+
+    return ticket_details
 
 
 def extract_open_parking_spots(csv_file=CSV_FILENAME):
