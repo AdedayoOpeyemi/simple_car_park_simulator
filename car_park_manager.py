@@ -64,6 +64,8 @@ def is_valid_uk_registration(input_str):
     return False
 
 def create_ticket(car_reg_number):
+    if active_parking_record(car_reg_number):
+        return {'status': 'failed', 'message': 'There is an existing record of a currently parked car with the same reg number'}
     # Get the current date time in epoch format
     entry_time = int(datetime.now().timestamp())
 
@@ -86,6 +88,19 @@ def create_ticket(car_reg_number):
         "status": "open"
     }
     save_ticket_record(ticket_record)
+    # return ticket_record
+    return {'status': 'success', 'ticekt': ticket_record}
+
+def unmap_ticket_record_to_headers(mapped_record):
+    ticket_record = {
+        "ticket_number": mapped_record.get("Ticket Id", ""),
+        "car_reg_no": mapped_record.get("Vehicle Reg no", ""),
+        "parking_spot": mapped_record.get("Parking spot", ""),
+        "entry_time": mapped_record.get("Entry Time", ""),
+        "exit_time": mapped_record.get("Exit Time", ""),
+        "parking_fee": mapped_record.get("Parking fee", ""),
+        "status": mapped_record.get("Status", "")
+    }
     return ticket_record
 
 def map_ticket_record_to_headers(ticket_record):
@@ -120,7 +135,6 @@ def fetch_ticket_details_from_csv(ticket_number):
             if current_ticket_number == ticket_number:
                 for key, csv_field in header_mapping.items():
                     ticket_details[key] = row.get(csv_field)
-                    print(ticket_details)
 
                 break  # Exit the loop once a matching ticket is found
 
@@ -143,7 +157,7 @@ def update_available_spots():
     AVAILABLE_SPOTS = extract_open_parking_spots(CSV_FILENAME)
 
 def close_ticket(car_reg):
-    update_exit_time(car_reg)
+    return update_exit_time(car_reg)
     # update_parking_fee(car_reg)
     # update_ticket_status()
 
@@ -153,6 +167,7 @@ def update_exit_time(car_reg, csv_file=CSV_FILENAME):
 
     # Read the original CSV file and create a temporary list to store the updated data
     updated_data = []
+    modified_ticket = []
 
     with open(csv_file, 'r') as csvfile:
         csv_reader = csv.DictReader(csvfile)  # Create a DictReader object
@@ -162,8 +177,10 @@ def update_exit_time(car_reg, csv_file=CSV_FILENAME):
                 row['Exit Time'] = exit_time
                 row['Status'] = 'Closed'
                 row['Parking fee'] = calculate_fee(int(exit_time), int(row['Entry Time']))
+                modified_ticket.append(row)
 
             updated_data.append(row)
+            
 
     # Write the updated data back to the CSV file
     with open(csv_file, 'w', newline='') as csvfile:
@@ -171,11 +188,13 @@ def update_exit_time(car_reg, csv_file=CSV_FILENAME):
         csv_writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
         csv_writer.writeheader()  # Write the header row
         csv_writer.writerows(updated_data)
-
-    print(f"Exit time updated for vehicle with registration number {car_reg}")
+    if len(modified_ticket) == 0:
+        return False
+    else:
+        return unmap_ticket_record_to_headers(modified_ticket[0])
 
 def update_parking_fee(car_reg):
-    parking_fee = calculate_fee(car_reg)
+    calculate_fee(car_reg)
 
 def calculate_fee(exit_time, entry_time):
     # Read the CSV file and find the entry and exit times based on the ticket number
@@ -198,3 +217,17 @@ def calculate_fee(exit_time, entry_time):
     fee = hours_parked * HOURLY_RATE  # Calculate the fee based on hours and hourly rate
     fee = round(fee, 2)
     return max(fee, BASE_FEE)
+
+def no_available_space():
+    if extract_open_parking_spots():
+        return False
+    else:
+        return True
+    
+def active_parking_record(car_reg):
+    with open(CSV_FILENAME, 'r') as csvfile:
+        csv_reader = csv.DictReader(csvfile)
+        for row in csv_reader:
+            if row['Vehicle Reg no'] == car_reg and row['Status'] == 'open':
+                return True
+    return False
